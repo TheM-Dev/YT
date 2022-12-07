@@ -1,0 +1,68 @@
+Events:
+    - Somebody joined X VC -> dm me
+    - New message on channel X -> dm me
+
+Commands:
+
+    - !m/m @ping - Deafen member
+    message.delete();
+    jeśli(id loopa === message.mentions.first().id){
+        jeśli(jest na kanale głosowym){
+            member.edit({
+                deaf: true,
+                reason: `Wyciszony na kanale głosowym. Komenda: !m/m`
+            });
+        } else {
+            message.channel.send({ embeds: [buildEmbed(`Użytkownik nie jest na kanale głosowym!`)] });
+        }
+    }
+
+    - !k/k - Kick all users from VC without X rank
+    message.delete();
+    jeśli(nie ma roli X){
+        jeśli(jest na kanale głosowym z ID){
+            member.edit({
+                channel: null,
+                reason: `Wyrzucony z kanału głosowego. Komenda: !k/k`
+            });
+        }
+    }
+
+    - !ma/ma - Mute and deafen all users on VC
+    message.delete();
+    jeśli(jest na kanale głosowym z ID){
+        jeśli(jest na kanale tym co wykonujący komendę){
+            member.edit({
+                mute: true,
+                deaf: true,
+                reason: `Wyciszony całkowicie. Komenda: !ma/ma`
+            });
+        }
+    }
+
+    - !t/t @ping - Timeout dla danej osoby
+    message.delete();
+    member.disableCommunicationUntil(Date.now() + (10 * 60 * 1000), 'Timeout. Komenda: !t/t')
+        .then(() => {
+            member.setNickname(`[Timeout] ${member.name}`, 'Timeout nickname change');
+            setTimeout(() => {
+                member.setNickname(`${member.nickname.replace('[Timeout] ', '')}`, 'Timeout nickname change back');
+            }, (10 * 60 * 1000));
+        })
+        .catch(console.error);
+    
+    - !i/i @ping - Display info about user
+    message.delete();
+    message.channel.send({
+        embed:[
+            new EmbedBuilder()
+                .setAuthor({ name: `${member.displayName} (${member.nickname})`, iconURL: member.displayAvatarURL() })
+                .setColor([ 255, 255, 0 ])
+                .addFields(
+	            	{ name: '\u200B', value: '\u200B' },
+	            	{ name: `Dołączył`, value: dayjs(member.joinedAt).format('DD/MM/YYYY'), inline: true },
+	            	{ name: `Role`, value: member.roles.join(', '), inline: true },
+	            )
+                .setFooter({ text: 'YT', iconURL: 'iconURL' });
+        ]
+    });
